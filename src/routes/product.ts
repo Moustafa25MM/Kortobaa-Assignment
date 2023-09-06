@@ -20,5 +20,5 @@ router.delete(
   productMiddlewares.deleteProduct
 );
 router.get('/:productId/user/:userId', productMiddlewares.getProductById);
-
+router.get('/user/:userId/products', productMiddlewares.getUserProducts);
 export const productRoute: Router = router;

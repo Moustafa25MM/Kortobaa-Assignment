@@ -29,10 +29,14 @@ const remove = async (productId: string, userId: string) => {
   }
   return false;
 };
-
+const getByUserId = async (userId: string) => {
+  const products = await models.Product.findAll({ where: { userId } });
+  return products;
+};
 export const productControllers = {
   create,
   getById,
   update,
   remove,
+  getByUserId,
 };
