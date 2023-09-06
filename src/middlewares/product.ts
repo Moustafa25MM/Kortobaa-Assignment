@@ -5,7 +5,6 @@ import { cloudi } from './imagesUpload';
 
 const createProduct = async (req: any, res: Response, next: NextFunction) => {
   const userId = req.user.id;
-  console.log(userId);
   const { title, price } = req.body;
   try {
     const user = await userControllers.getById(userId);
@@ -38,7 +37,8 @@ const createProduct = async (req: any, res: Response, next: NextFunction) => {
   }
 };
 const getProductById = async (req: any, res: Response, next: NextFunction) => {
-  const { userId, productId } = req.params;
+  const { productId } = req.params;
+  const userId = req.user.id;
 
   try {
     const user = await userControllers.getById(userId);
