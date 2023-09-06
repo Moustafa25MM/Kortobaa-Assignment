@@ -27,5 +27,9 @@ router.get(
   authMethods.isUserAuthorized,
   productMiddlewares.getProductById
 );
-router.get('/user/:userId/products', productMiddlewares.getUserProducts);
+router.get(
+  '/user/products',
+  authMethods.isUserAuthorized,
+  productMiddlewares.getUserProducts
+);
 export const productRoute: Router = router;

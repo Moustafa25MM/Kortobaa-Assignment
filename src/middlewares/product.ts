@@ -141,8 +141,7 @@ const deleteProduct = async (req: any, res: Response, next: NextFunction) => {
   }
 };
 const getUserProducts = async (req: any, res: Response, next: NextFunction) => {
-  const { userId } = req.params;
-
+  const userId = req.user.id;
   try {
     const user = await userControllers.getById(userId);
     if (!user) {
