@@ -9,8 +9,8 @@ import { errorHandler } from './middlewares/errorHandler';
 dotenv.config();
 
 const app: Express = express();
-app.use(express.json());
 app.use(morgan('tiny'));
+app.use(express.json());
 
 app.use(indexRouter);
 app.use(errorHandler);
