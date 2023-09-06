@@ -3,12 +3,9 @@ import { userControllers } from '../controllers/user';
 import { productControllers } from '../controllers/product';
 import { cloudi } from './imagesUpload';
 
-const createProduct = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  const { userId } = req.params;
+const createProduct = async (req: any, res: Response, next: NextFunction) => {
+  const userId = req.user.id;
+  console.log(userId);
   const { title, price } = req.body;
   try {
     const user = await userControllers.getById(userId);

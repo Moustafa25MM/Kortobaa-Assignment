@@ -41,7 +41,7 @@ const isUserAuthorized = async (req: any, res: any, next: NextFunction) => {
       return res.status(400);
     }
 
-    req.employee = {
+    req.user = {
       id: userData.id,
       email: userData.email,
     };
