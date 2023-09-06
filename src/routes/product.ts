@@ -9,5 +9,6 @@ router.post(
   productUpload.single('image'),
   productMiddlewares.createProduct
 );
+router.get('/:productId/user/:userId', productMiddlewares.getProductById);
 
 export const productRoute: Router = router;
