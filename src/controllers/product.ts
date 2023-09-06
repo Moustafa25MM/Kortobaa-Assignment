@@ -9,8 +9,17 @@ const getById = (productId: string) => {
   const product = models.Product.findByPk(productId);
   return product;
 };
-
+const update = async (productId: string, userId: string, data: any) => {
+  const product = await models.Product.findOne({
+    where: { id: productId, userId },
+  });
+  if (product) {
+    await product.update(data);
+  }
+  return product;
+};
 export const productControllers = {
   create,
   getById,
+  update,
 };

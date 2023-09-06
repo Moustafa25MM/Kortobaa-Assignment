@@ -9,6 +9,12 @@ router.post(
   productUpload.single('image'),
   productMiddlewares.createProduct
 );
+
+router.patch(
+  '/user/:userId/update/:productId',
+  productUpload.single('image'),
+  productMiddlewares.updateProduct
+);
 router.get('/:productId/user/:userId', productMiddlewares.getProductById);
 
 export const productRoute: Router = router;

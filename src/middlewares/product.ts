@@ -67,7 +67,53 @@ const getProductById = async (req: any, res: Response, next: NextFunction) => {
   }
 };
 
+const updateProduct = async (req: any, res: Response, next: NextFunction) => {
+  const { userId, productId } = req.params;
+  const { title, price } = req.body;
+
+  try {
+    const user = await userControllers.getById(userId);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    let image = '';
+
+    if (req.file) {
+      const uploadedImg = req.file.path;
+      const images = await cloudi.uploader.upload(uploadedImg, {
+        public_id: `${productId}`,
+        width: 500,
+        height: 500,
+        crop: 'fill',
+      });
+      image = images.url;
+    } else {
+      const product = await productControllers.getById(productId);
+      if (!product) {
+        return res.status(404).json({ error: 'Product not found' });
+      }
+      image = product.image;
+    }
+
+    const product = await productControllers.update(productId, userId, {
+      title,
+      image,
+      price,
+    });
+
+    if (!product) {
+      return res.status(404).json({ error: 'Product not found' });
+    }
+
+    return res.status(200).json(product);
+  } catch (error: any) {
+    return res.status(500).json({ error: error.message });
+  }
+};
+
 export const productMiddlewares = {
   createProduct,
   getProductById,
+  updateProduct,
 };
