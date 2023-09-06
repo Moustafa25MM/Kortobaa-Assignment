@@ -12,8 +12,9 @@ router.post(
 );
 
 router.patch(
-  '/user/:userId/update/:productId',
+  '/update/:productId',
   productUpload.single('image'),
+  authMethods.isUserAuthorized,
   productMiddlewares.updateProduct
 );
 router.delete(

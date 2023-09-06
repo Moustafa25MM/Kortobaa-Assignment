@@ -65,7 +65,8 @@ const getProductById = async (req: any, res: Response, next: NextFunction) => {
 };
 
 const updateProduct = async (req: any, res: Response, next: NextFunction) => {
-  const { userId, productId } = req.params;
+  const { productId } = req.params;
+  const userId = req.user.id;
   const { title, price } = req.body;
 
   try {
@@ -89,6 +90,11 @@ const updateProduct = async (req: any, res: Response, next: NextFunction) => {
       const product = await productControllers.getById(productId);
       if (!product) {
         return res.status(404).json({ error: 'Product not found' });
+      }
+      if (product?.userId != userId) {
+        return res
+          .status(403)
+          .json({ error: 'Access denied. You do not own this product.' });
       }
       image = product.image;
     }
