@@ -3,6 +3,7 @@ import * as dotenv from 'dotenv';
 import morgan from 'morgan';
 
 import { sequelize } from './util/database';
+import { indexRouter } from './routes';
 
 dotenv.config();
 
@@ -10,10 +11,7 @@ const app: Express = express();
 app.use(express.json());
 app.use(morgan('tiny'));
 
-app.use('/', (req: Request, res: Response) => {
-  console.log('Index');
-  return res.status(200).send('Hello');
-});
+app.use(indexRouter);
 
 const port = process.env.PORT;
 
