@@ -4,6 +4,7 @@ import morgan from 'morgan';
 
 import { sequelize } from './util/database';
 import { indexRouter } from './routes';
+import { errorHandler } from './middlewares/errorHandler';
 
 dotenv.config();
 
@@ -12,6 +13,7 @@ app.use(express.json());
 app.use(morgan('tiny'));
 
 app.use(indexRouter);
+app.use(errorHandler);
 
 const port = process.env.PORT;
 

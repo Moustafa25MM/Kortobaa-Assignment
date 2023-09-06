@@ -19,7 +19,7 @@ const createUser = async (req: Request, res: Response): Promise<Response> => {
 
   if (!user) throw new Error('Error: user is not created');
 
-  return res.status(200).json(user);
+  return res.status(201).json(user);
 };
 
 export const userMiddlewares = {
