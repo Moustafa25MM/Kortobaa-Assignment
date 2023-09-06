@@ -2,6 +2,8 @@ import express, { Express, Response, Request } from 'express';
 import * as dotenv from 'dotenv';
 import morgan from 'morgan';
 
+import { sequelize } from './util/database';
+
 dotenv.config();
 
 const app: Express = express();
@@ -14,6 +16,15 @@ app.use('/', (req: Request, res: Response) => {
 });
 
 const port = process.env.PORT;
-app.listen(port, () => {
-  console.log(`The server is running on port " ${port}"`);
-});
+
+sequelize
+  .sync()
+  .then(() => {
+    console.log('DB connected');
+    app.listen(port, () => {
+      console.log(`The server is running on port " ${port}"`);
+    });
+  })
+  .catch(() => {
+    console.log('DB connection failed');
+  });
