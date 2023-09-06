@@ -18,7 +18,8 @@ router.patch(
   productMiddlewares.updateProduct
 );
 router.delete(
-  '/user/:userId/delete/:productId',
+  '/delete/:productId',
+  authMethods.isUserAuthorized,
   productMiddlewares.deleteProduct
 );
 router.get(

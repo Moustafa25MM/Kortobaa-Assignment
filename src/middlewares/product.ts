@@ -115,7 +115,8 @@ const updateProduct = async (req: any, res: Response, next: NextFunction) => {
   }
 };
 const deleteProduct = async (req: any, res: Response, next: NextFunction) => {
-  const { userId, productId } = req.params;
+  const { productId } = req.params;
+  const userId = req.user.id;
 
   try {
     const user = await userControllers.getById(userId);
@@ -123,14 +124,15 @@ const deleteProduct = async (req: any, res: Response, next: NextFunction) => {
       return res.status(404).json({ error: 'User not found' });
     }
     const product = await productControllers.getById(productId);
+
+    const result = await productControllers.remove(productId, userId);
+    if (!result) {
+      return res.status(404).json({ error: 'Product not found' });
+    }
     if (product?.userId != userId) {
       return res
         .status(403)
         .json({ error: 'Access denied. You do not own this product.' });
-    }
-    const result = await productControllers.remove(productId, userId);
-    if (!result) {
-      return res.status(404).json({ error: 'Product not found' });
     }
 
     return res.status(200).json({ message: 'Product deleted successfully' });
