@@ -15,6 +15,10 @@ router.patch(
   productUpload.single('image'),
   productMiddlewares.updateProduct
 );
+router.delete(
+  '/user/:userId/delete/:productId',
+  productMiddlewares.deleteProduct
+);
 router.get('/:productId/user/:userId', productMiddlewares.getProductById);
 
 export const productRoute: Router = router;

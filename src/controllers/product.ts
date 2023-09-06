@@ -18,8 +18,21 @@ const update = async (productId: string, userId: string, data: any) => {
   }
   return product;
 };
+
+const remove = async (productId: string, userId: string) => {
+  const product = await models.Product.findOne({
+    where: { id: productId, userId },
+  });
+  if (product) {
+    await product.destroy();
+    return true;
+  }
+  return false;
+};
+
 export const productControllers = {
   create,
   getById,
   update,
+  remove,
 };
