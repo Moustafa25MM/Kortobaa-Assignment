@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { userControllers } from '../controllers/user';
 import { productControllers } from '../controllers/product';
 import { cloudi } from './imagesUpload';
-
+import clearImage from './clearImage';
 const createProduct = async (req: any, res: Response, next: NextFunction) => {
   const userId = req.user.id;
   const { title, price } = req.body;
@@ -13,8 +13,7 @@ const createProduct = async (req: any, res: Response, next: NextFunction) => {
     }
     let image: any = '';
     if (!req.file) {
-      image =
-        'https://console.cloudinary.com/console/c-d982253c4e1988dd33d1b4d68832c7/media_library/search/asset/a2711894209c60ead019cc239fd8ce88/manage?q=&context=manage';
+      return res.status(400).json({ error: 'No Image was uploaded' });
     } else {
       const uploadedImg = await cloudi.uploader.upload(req.file.path, {
         public_id: `${Date.now}`,
@@ -133,6 +132,10 @@ const deleteProduct = async (req: any, res: Response, next: NextFunction) => {
       return res
         .status(403)
         .json({ error: 'Access denied. You do not own this product.' });
+    }
+    if (product?.image) {
+      const publicId = product.image.split('/').pop()?.split('.')[0]!;
+      clearImage(publicId);
     }
 
     return res.status(200).json({ message: 'Product deleted successfully' });
