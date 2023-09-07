@@ -141,9 +141,7 @@ describe('Login Route', () => {
     });
 
     it('should not retrieve product if user is not authenticated', async () => {
-      const response = await request(app)
-        .get('/product/1') // Assuming 1 is an id of a product
-        .expect(401);
+      const response = await request(app).get('/product/1').expect(401);
 
       expect(response.body.error).toBe('Unauthorized: Token not provided');
     });
@@ -186,7 +184,7 @@ describe('Login Route', () => {
       };
 
       const response = await request(app)
-        .patch('/product/update/1000') // Assuming 1000 is a non-existing product id
+        .patch('/product/update/1000')
         .set('Authorization', `${token}`)
         .send(updatedProduct)
         .expect(404);
@@ -200,11 +198,41 @@ describe('Login Route', () => {
       };
 
       const response = await request(app)
-        .patch('/product/update/1000') // Assuming 1000 is a non-existing product id
+        .patch('/product/update/1000')
         .send(updatedProduct)
         .expect(401);
 
       expect(response.body.error).toBe('Unauthorized: Token not provided');
+    });
+  });
+  describe('Delete Product Route', () => {
+    let user: UserAttributes;
+    let token: string | String;
+
+    beforeAll(async () => {
+      const userData: UserAttributes = {
+        id: 98,
+        username: 'Test User',
+        password: authMethods.hashPassword('password').toString(),
+        email: 'user@example.com',
+      };
+
+      await User.create(userData);
+      token = authMethods.generateJWT({ id: userData.id.toString() });
+    });
+
+    afterAll(async () => {
+      await User.destroy({ where: {} });
+      await Product.destroy({ where: {} });
+    });
+
+    it('should not delete a product that does not exist', async () => {
+      const response = await request(app)
+        .delete('/product/delete/1000')
+        .set('Authorization', `${token}`)
+        .expect(404);
+
+      expect(response.body.error).toBe('Product not found');
     });
   });
 });
