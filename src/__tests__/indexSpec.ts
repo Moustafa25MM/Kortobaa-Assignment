@@ -157,4 +157,54 @@ describe('Login Route', () => {
       expect(response.body.error).toBe('Product not found');
     });
   });
+  describe('Update Product Route', () => {
+    let user: UserAttributes;
+    let token: string | String;
+    let product: Product;
+
+    beforeAll(async () => {
+      const userData: UserAttributes = {
+        id: 97,
+        username: 'Test User',
+        password: authMethods.hashPassword('password').toString(),
+        email: 'user@example.com',
+      };
+
+      await User.create(userData);
+      token = authMethods.generateJWT({ id: userData.id.toString() });
+    });
+
+    afterAll(async () => {
+      await User.destroy({ where: {} });
+      await Product.destroy({ where: {} });
+    });
+
+    it('should not update a product that does not exist', async () => {
+      const updatedProduct = {
+        title: 'Updated Product',
+        price: 200,
+      };
+
+      const response = await request(app)
+        .patch('/product/update/1000') // Assuming 1000 is a non-existing product id
+        .set('Authorization', `${token}`)
+        .send(updatedProduct)
+        .expect(404);
+
+      expect(response.body.error).toBe('Product not found');
+    });
+    it('should not update product if user is not authenicated', async () => {
+      const updatedProduct = {
+        title: 'Updated Product',
+        price: 200,
+      };
+
+      const response = await request(app)
+        .patch('/product/update/1000') // Assuming 1000 is a non-existing product id
+        .send(updatedProduct)
+        .expect(401);
+
+      expect(response.body.error).toBe('Unauthorized: Token not provided');
+    });
+  });
 });
