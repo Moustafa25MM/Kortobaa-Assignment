@@ -10,8 +10,16 @@ const createProduct = async (req: any, res: Response, next: NextFunction) => {
   if (!title) {
     return res.status(404).json({ error: 'Title not found' });
   }
+  if (title.length < 5) {
+    return res
+      .status(404)
+      .json({ error: 'Title should have 5 chars at least' });
+  }
   if (!price) {
     return res.status(404).json({ error: 'Price not found' });
+  }
+  if (price < 9) {
+    return res.status(404).json({ error: 'price should be at least 9' });
   }
   try {
     const user = await userControllers.getById(userId);

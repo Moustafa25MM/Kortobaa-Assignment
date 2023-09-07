@@ -28,6 +28,12 @@ Product.init(
     title: {
       type: DataTypes.STRING,
       allowNull: false,
+      validate: {
+        len: {
+          args: [5, 255],
+          msg: 'Title must be more than 5 characters long',
+        },
+      },
     },
     image: {
       type: DataTypes.STRING,
@@ -36,6 +42,12 @@ Product.init(
     price: {
       type: DataTypes.FLOAT,
       allowNull: false,
+      validate: {
+        min: {
+          args: [9],
+          msg: 'Price must be more than 9',
+        },
+      },
     },
     userId: {
       type: DataTypes.INTEGER,
