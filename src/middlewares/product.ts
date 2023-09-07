@@ -3,9 +3,16 @@ import { userControllers } from '../controllers/user';
 import { productControllers } from '../controllers/product';
 import { cloudi } from './imagesUpload';
 import clearImage from './clearImage';
+
 const createProduct = async (req: any, res: Response, next: NextFunction) => {
   const userId = req.user.id;
   const { title, price } = req.body;
+  if (!title) {
+    return res.status(404).json({ error: 'Title not found' });
+  }
+  if (!price) {
+    return res.status(404).json({ error: 'Price not found' });
+  }
   try {
     const user = await userControllers.getById(userId);
     if (!user) {
