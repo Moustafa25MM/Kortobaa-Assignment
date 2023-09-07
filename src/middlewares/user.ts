@@ -12,11 +12,27 @@ const createUser = async (req: Request, res: Response): Promise<Response> => {
   if (!username) {
     return res.status(400).json({ error: 'Please provide username' });
   }
+  if (username.length < 3 || username.length > 255) {
+    return res
+      .status(400)
+      .json({ error: 'Username must have 3 characters at least' });
+  }
+  const existingEmail = await userControllers.getByEmail(email);
+  if (existingEmail) {
+    return res.status(400).json({ error: 'email is already exists!' });
+  }
+
   if (!email) {
     return res.status(400).json({ error: 'Please provide email' });
   }
+  if (!email.includes('@') || !email.includes('.')) {
+    return res.status(400).json({ error: 'Please provide a valid email' });
+  }
   if (!password) {
     return res.status(400).json({ error: 'Please provide password' });
+  }
+  if (password.length < 6) {
+    return res.status(400).json({ error: 'Password must be 6 at least' });
   }
   password = authMethods.hashPassword(password);
 

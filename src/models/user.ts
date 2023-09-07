@@ -25,14 +25,32 @@ User.init(
     username: {
       type: DataTypes.STRING,
       allowNull: false,
+      validate: {
+        len: {
+          args: [3, 255],
+          msg: 'Username must be at least 3 characters long',
+        },
+      },
     },
     password: {
       type: DataTypes.STRING,
       allowNull: false,
+      validate: {
+        len: {
+          args: [6, 255],
+          msg: 'Password must be between 6 and 255 characters long',
+        },
+      },
     },
     email: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: true,
+      validate: {
+        isEmail: {
+          msg: 'Must be a valid email address',
+        },
+      },
     },
   },
   {
