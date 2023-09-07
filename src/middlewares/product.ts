@@ -3,6 +3,7 @@ import { userControllers } from '../controllers/user';
 import { productControllers } from '../controllers/product';
 import { cloudi } from './imagesUpload';
 import clearImage from './clearImage';
+import { paginationOption } from '../libs/paginations';
 
 const createProduct = async (req: any, res: Response, next: NextFunction) => {
   const userId = req.user.id;
@@ -167,7 +168,28 @@ const getUserProducts = async (req: any, res: Response, next: NextFunction) => {
     }
 
     const products = await productControllers.getByUserId(userId);
-    return res.status(200).json(products);
+    let pageSize = req.query.pageSize
+      ? parseInt(req.query.pageSize as string)
+      : 5;
+    pageSize = Math.min(20, pageSize);
+    const totalDocs = products.length;
+    const maxPageNumber = Math.ceil(totalDocs / pageSize);
+
+    let pageNumber = req.query.pageNumber
+      ? parseInt(req.query.pageNumber as string)
+      : 1;
+    pageNumber = Math.min(Math.max(pageNumber, 1), maxPageNumber);
+    const paginatedProducts = products.slice(
+      (pageNumber - 1) * pageSize,
+      pageNumber * pageSize
+    );
+
+    const paginationOptions = paginationOption(pageSize, pageNumber, totalDocs);
+
+    return res.status(200).json({
+      pagination: paginationOptions,
+      employees: paginatedProducts,
+    });
   } catch (error: any) {
     return res.status(500).json({ error: error.message });
   }
